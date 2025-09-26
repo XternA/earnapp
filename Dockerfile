@@ -12,4 +12,5 @@ RUN apt-get update \
 WORKDIR /app
 COPY . .
 
+VOLUME [ "/etc/earnapp" ]
 ENTRYPOINT ["sh", "/app/run.sh"]
