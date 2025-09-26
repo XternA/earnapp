@@ -29,4 +29,4 @@ fi
 printf "UUID:   $(cat /etc/earnapp/uuid)\n"
 printf "Status: $(cat /etc/earnapp/status)\n\n"
 
-wait
+sleep infinity
