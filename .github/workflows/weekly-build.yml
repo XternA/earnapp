@@ -1,4 +1,4 @@
-name: Build VS Code Image on Weekly Schedule Update
+name: Build EarnApp Image on Weekly Schedule
 
 on:
   schedule:
