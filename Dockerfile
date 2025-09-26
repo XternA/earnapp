@@ -12,4 +12,4 @@ RUN apt-get update \
 WORKDIR /app
 COPY . .
 
-ENTRYPOINT ["/app/run.sh"]
+ENTRYPOINT ["sh", "/app/run.sh"]
