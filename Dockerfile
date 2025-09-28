@@ -12,5 +12,7 @@ RUN apt-get update \
 WORKDIR /app
 COPY . .
 
+RUN chmod 755 hostnamectl && mv hostnamectl /usr/local/bin
+
 VOLUME [ "/etc/earnapp" ]
 ENTRYPOINT ["sh", "/app/run.sh"]

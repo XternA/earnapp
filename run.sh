@@ -1,5 +1,7 @@
 #!/bin/sh
 
+hostnamectl --uuid
+
 echo "
   _____    _    ____  _   _    _    ____  ____
  | ____|  / \  |  _ \| \ | |  / \  |  _ \|  _ \ 
@@ -26,7 +28,9 @@ if [ $count -eq $retries ]; then
     exit 1
 fi
 
-printf "UUID:   $(cat /etc/earnapp/uuid)\n"
-printf "Status: $(cat /etc/earnapp/status)\n\n"
+printf "✔ UUID:   $(cat /etc/earnapp/uuid)\n"
+status=$(cat /etc/earnapp/status 2>/dev/null)
+printf "%s Status: %s\n\n" "$( [ "$status" = enabled ] && echo "✔" || echo "✖" )" "${status:-disabled}"
+earnapp register
 
 sleep infinity
