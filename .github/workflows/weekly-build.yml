@@ -56,7 +56,10 @@ jobs:
           context: .
           file: Dockerfile.alpine
           pull: true
+          cache-from: type=registry,ref=ghcr.io/xterna/earnapp:cache
+          cache-to: type=registry,ref=ghcr.io/xterna/earnapp:cache,mode=max
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
           tags: |
+            ghcr.io/xterna/earnapp:alpine-${{ env.EARNAPP_VERSION }}
             ghcr.io/xterna/earnapp:alpine
