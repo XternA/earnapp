@@ -7,11 +7,11 @@ RUN apt-get update \
     && printf '#!/bin/sh \n echo "%s"' "$(lsb_release -a)" > /usr/bin/lsb_release \
     && printf '#!/bin/sh \n echo "%s"' "$(hostnamectl)" > /usr/bin/hostnamectl \
     && printf '#!/bin/sh \n echo "%s"' "$(systemctl)" > /usr/bin/systemctl \
-    && chmod 755 /usr/bin/install /usr/bin/hostnamectl /usr/bin/lsb_release /usr/bin/systemctl \
+    && chmod +x /usr/bin/install /usr/bin/hostnamectl /usr/bin/lsb_release /usr/bin/systemctl \
     && wget -qO /tmp/install.sh https://cdn-earnapp.b-cdn.net/static/earnapp/install.sh \
     && bash /tmp/install.sh -y \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp \
-    && earnapp stop
+    && earnapp stop \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp
 
 WORKDIR /app
 COPY . .

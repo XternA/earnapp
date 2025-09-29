@@ -1,0 +1,20 @@
+FROM alpine:latest
+
+ENV LANG=C.UTF-8
+
+RUN apk add --no-cache wget ca-certificates bash gcompat coreutils libstdc++ \
+    && printf '#!/bin/sh\n echo "Alpine Linux"' > /usr/bin/lsb_release \
+    && printf '#!/bin/sh\n echo "Alpine Linux"' > /usr/bin/hostnamectl \
+    && printf '#!/bin/sh\n' > /usr/bin/systemctl \
+    && printf '#!/bin/sh\nif [ "$1" = "-I" ]; then\n  hostname\nelse\n  /bin/busybox hostname "$@"\nfi\n' > /usr/bin/hostname \
+    && chmod +x /usr/bin/lsb_release /usr/bin/hostnamectl /usr/bin/systemctl /usr/bin/hostname \
+    && wget -qO /tmp/install.sh https://cdn-earnapp.b-cdn.net/static/earnapp/install.sh \
+    && bash /tmp/install.sh -y \
+    && earnapp stop \
+    && rm -rf /tmp/* /var/tmp/*
+
+WORKDIR /app
+COPY . .
+
+VOLUME ["/etc/earnapp"]
+ENTRYPOINT ["sh", "/app/run.sh"]

@@ -49,3 +49,14 @@ jobs:
           tags: |
             ghcr.io/xterna/earnapp:${{ env.EARNAPP_VERSION }}
             ghcr.io/xterna/earnapp:latest
+
+      - name: Build & Push Image (Alpine)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.alpine
+          pull: true
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: true
+          tags: |
+            ghcr.io/xterna/earnapp:alpine
