@@ -1,22 +1,25 @@
 #!/bin/sh
 
-echo "
+cat <<'EOF'
   _____    _    ____  _   _    _    ____  ____
  | ____|  / \  |  _ \| \ | |  / \  |  _ \|  _ \ 
  |  _|   / _ \ | |_) |  \| | / _ \ | |_) | |_) |
  | |___ / ___ \|  _ <| |\  |/ ___ \|  __/|  __/ 
  |_____/_/   \_\_| \_\_| \_/_/   \_\_|   |_|
-"
-printf "v$(earnapp --version | cut -d' ' -f2)\n\n"
+EOF
+printf "v%s\n\n" "$(cat /etc/earnapp/ver)"
 
-[ -n "$EARNAPP_UUID" ] && echo "$EARNAPP_UUID" > /etc/earnapp/uuid
+[ -n "$EARNAPP_UUID" ] && printf "%s" "$EARNAPP_UUID" > /etc/earnapp/uuid
 
 earnapp start > /dev/null 2>&1 &
 
 retries=10
 count=0
 while [ $count -lt $retries ]; do
-    [ $(cat /etc/earnapp/status) = "enabled" ] && break
+    if [ "$(cat /etc/earnapp/status)" = "enabled" ]; then
+        status="enabled"
+        break
+    fi
     count=$((count + 1))
     sleep 2
 done
@@ -26,9 +29,9 @@ if [ $count -eq $retries ]; then
     exit 1
 fi
 
-printf "✔ UUID:   $(cat /etc/earnapp/uuid)\n"
-status=$(cat /etc/earnapp/status 2>/dev/null)
-printf "%s Status: %s\n\n" "$( [ "$status" = enabled ] && echo "✔" || echo "✖" )" "${status:-disabled}"
-earnapp register
+printf "✔ UUID:   %s\n" "$(cat /etc/earnapp/uuid)"
+printf "%s Status: %s\n\n" "$([ "$status" = enabled ] && echo "✔" || echo "✖")" "${status:-disabled}"
 
-sleep infinity
+earnapp register
+earnapp autoupgrade &
+earnapp run
