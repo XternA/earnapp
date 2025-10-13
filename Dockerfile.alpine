@@ -12,7 +12,7 @@ RUN apk add --no-cache wget ca-certificates bash gcompat coreutils libstdc++ \
     && bash /tmp/install.sh -y \
     && earnapp stop \
     && rm -rf /tmp/* /var/tmp/* \
-        /usr/share/{doc,man,info,locale}
+        /usr/share/{doc,man,info,locale} \
         /var/cache/apk /usr/bin/apk
 
 WORKDIR /app
