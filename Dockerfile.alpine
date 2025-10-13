@@ -11,7 +11,9 @@ RUN apk add --no-cache wget ca-certificates bash gcompat coreutils libstdc++ \
     && wget -qO /tmp/install.sh https://cdn-earnapp.b-cdn.net/static/earnapp/install.sh \
     && bash /tmp/install.sh -y \
     && earnapp stop \
-    && rm -rf /tmp/* /var/tmp/*
+    && rm -rf /tmp/* /var/tmp/* \
+        /usr/share/{doc,man,info,locale}
+        /var/cache/apk /usr/bin/apk
 
 WORKDIR /app
 COPY . .
