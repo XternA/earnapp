@@ -20,4 +20,4 @@ COPY . .
 RUN chmod +x /app/run.sh
 
 VOLUME ["/etc/earnapp"]
-ENTRYPOINT ["./app/run.sh"]
+ENTRYPOINT ["./run.sh"]
