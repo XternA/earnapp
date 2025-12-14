@@ -9,14 +9,15 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     && wget -qO /tmp/install.sh https://cdn-earnapp.b-cdn.net/static/earnapp/install.sh \
     && bash /tmp/install.sh -y \
     && earnapp stop \
-    && rm -rf /var/lib/{apt,dpkg,cache,log} \
+    && rm -rf /tmp/* /etc/apt \
+        /usr/bin/{apt,apt-get,dpkg,apt-cache,apt-config} \
+        /var/lib/{apt,dpkg,cache,log} \
         /usr/share/{doc,man,info,locale,i18n} \
-        /var/log/apt /var/tmp /var/cache/apt/* \
-        /etc/apt \
-        /tmp/*
+        /var/log/apt /var/tmp /var/cache/apt/*
 
 WORKDIR /app
 COPY . .
+RUN chmod +x /app/run.sh
 
-VOLUME [ "/etc/earnapp" ]
-ENTRYPOINT ["sh", "/app/run.sh"]
+VOLUME ["/etc/earnapp"]
+ENTRYPOINT ["./app/run.sh"]

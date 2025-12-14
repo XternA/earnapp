@@ -12,11 +12,12 @@ RUN apk add --no-cache wget ca-certificates bash gcompat coreutils libstdc++ \
     && bash /tmp/install.sh -y \
     && earnapp stop \
     && rm -rf /tmp/* /var/tmp/* \
-        /usr/share/{doc,man,info,locale} \
-        /var/cache/apk /usr/bin/apk
+        /usr/share/{doc,man,info,locale,terminfo,tabset,bash-completion} \
+        /var/cache/apk /usr/bin/apk /sbin/apk /lib/apk /etc/apk
 
 WORKDIR /app
 COPY . .
+RUN chmod +x /app/run.sh
 
 VOLUME ["/etc/earnapp"]
-ENTRYPOINT ["sh", "/app/run.sh"]
+ENTRYPOINT ["./app/run.sh"]

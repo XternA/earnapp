@@ -1,0 +1,92 @@
+name: Build and Push EarnApp Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'EarnApp version to build (e.g., v1.xxx.xxx)'
+        required: false
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Determine or extract current EarnApp version
+        id: version
+        run: |
+          # Use input version if provided, otherwise fetch from upstream
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+            echo "Using provided version: $VERSION"
+          else
+            echo "No version provided, fetching from upstream..."
+            wget -qO /tmp/install.sh https://cdn-earnapp.b-cdn.net/static/earnapp/install.sh
+            VERSION=$(grep '^VERSION=' /tmp/install.sh | cut -d'"' -f2)
+            VERSION="v$VERSION"
+            echo "Fetched version: $VERSION"
+          fi
+
+          if [ -z "$VERSION" ]; then
+            echo "❌ Failed to determine version!"
+            exit 1
+          fi
+
+          echo "EARNAPP_VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }}
+
+      - name: Build & Push Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          cache-from: type=registry,ref=ghcr.io/xterna/earnapp:cache
+          cache-to: type=registry,ref=ghcr.io/xterna/earnapp:cache,mode=max
+          pull: true
+          platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
+          tags: |
+            ghcr.io/xterna/earnapp:${{ env.EARNAPP_VERSION }}
+            ghcr.io/xterna/earnapp:latest
+
+      - name: Build & Push Image (Alpine)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.alpine
+          pull: true
+          cache-from: type=registry,ref=ghcr.io/xterna/earnapp:cache
+          cache-to: type=registry,ref=ghcr.io/xterna/earnapp:cache,mode=max
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: true
+          tags: |
+            ghcr.io/xterna/earnapp:alpine-${{ env.EARNAPP_VERSION }}
+            ghcr.io/xterna/earnapp:alpine
+
+      - name: Summary
+        run: |
+          echo "### ✅ Build Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Successfully built and pushed version **${{ env.EARNAPP_VERSION }}**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "#### Images pushed:" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ghcr.io/xterna/earnapp:latest\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ghcr.io/xterna/earnapp:${{ env.EARNAPP_VERSION }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ghcr.io/xterna/earnapp:alpine\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ghcr.io/xterna/earnapp:alpine-${{ env.EARNAPP_VERSION }}\`" >> $GITHUB_STEP_SUMMARY
