@@ -6,8 +6,8 @@ This repository provides Docker images for running EarnApp in lightweight, isola
 
 | Image Base         | Channel            | Registry               | Tag    | Size   |
 |:-------------------|:-------------------|:-----------------------|:------:|:------:|
-| debian:trixie-slim | Main / Stable      | ghcr.io/xterna/earnapp | latest | 159MB  |
-| alpine:latest      | Secondary / Stable | ghcr.io/xterna/earnapp | alpine | 68.8MB |
+| debian:trixie-slim | Main / Stable      | ghcr.io/xterna/earnapp | latest | 74MB   |
+| alpine:latest      | Secondary / Stable | ghcr.io/xterna/earnapp | alpine | 31MB   |
 
 ### Features
 - Ready-to-run EarnApp containers.
