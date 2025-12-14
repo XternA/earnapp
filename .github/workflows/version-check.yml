@@ -31,7 +31,7 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           echo "Checking if version $VERSION already exists in registry..."
           
-          if docker manifest inspect ghcr.io/xterna/earnapp:debian-$VERSION > /dev/null 2>&1; then
+          if docker manifest inspect ghcr.io/xterna/earnapp:$VERSION > /dev/null 2>&1; then
             echo "✅ Version $VERSION already exists in registry"
             echo "should_build=false" >> $GITHUB_OUTPUT
           else
