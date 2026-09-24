@@ -25,7 +25,7 @@ jobs:
             echo "Using provided version: $VERSION"
           else
             echo "No version provided, fetching from upstream..."
-            wget -qO /tmp/install.sh https://cdn-earnapp.b-cdn.net/static/earnapp/install.sh
+            wget -qO /tmp/install.sh https://brightdata.com/static/earnapp/install.sh
             VERSION=$(grep '^VERSION=' /tmp/install.sh | cut -d'"' -f2)
             VERSION="v$VERSION"
             echo "Fetched version: $VERSION"

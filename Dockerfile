@@ -6,7 +6,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     && printf '#!/bin/sh\necho "%s"' "$(hostnamectl)" > /usr/bin/hostnamectl \
     && printf '#!/bin/sh\necho "%s"' "$(systemctl)" > /usr/bin/systemctl \
     && chmod +x /usr/bin/lsb_release /usr/bin/hostnamectl /usr/bin/systemctl \
-    && wget -qO /tmp/install.sh https://cdn-earnapp.b-cdn.net/static/earnapp/install.sh \
+    && wget -qO /tmp/install.sh https://brightdata.com/static/earnapp/install.sh \
     && bash /tmp/install.sh -y \
     && earnapp stop \
     && rm -rf /tmp/* /etc/apt \

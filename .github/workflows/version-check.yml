@@ -16,7 +16,7 @@ jobs:
       - name: Extract EarnApp version
         id: version
         run: |
-          wget -qO /tmp/install.sh https://cdn-earnapp.b-cdn.net/static/earnapp/install.sh
+          wget -qO /tmp/install.sh https://brightdata.com/static/earnapp/install.sh
           VERSION=$(grep '^VERSION=' /tmp/install.sh | cut -d'"' -f2)
           if [ -z "$VERSION" ]; then
             echo "❌ Failed to extract EarnApp version!"
